@@ -1,7 +1,7 @@
 import os
 import pickle
 import argparse
-from pytorch_transformers.tokenization_roberta import RobertaTokenizer
+from transformers.tokenization_roberta import RobertaTokenizer
 from mspan_roberta_gcn.drop_roberta_dataset import DropReader
 from tag_mspan_robert_gcn.drop_roberta_mspan_dataset import DropReader as TDropReader
 

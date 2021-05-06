@@ -10,7 +10,7 @@ from tag_mspan_robert_gcn.roberta_batch_gen_tmspan import DropBatchGen as TDropB
 from tag_mspan_robert_gcn.tag_mspan_roberta_gcn import NumericallyAugmentedBertNet as TNumericallyAugmentedBertNet
 from datetime import datetime
 from tools.utils import create_logger, set_environment
-from pytorch_transformers import RobertaTokenizer, RobertaModel
+from transformers import RobertaTokenizer, RobertaModel
 
 
 parser = argparse.ArgumentParser("Bert training task.")
@@ -41,8 +41,11 @@ def main():
     best_result = float("-inf")
     logger.info("Loading data...")
     if not args.tag_mspan:
+        '''
         train_itr = DropBatchGen(args, data_mode="train", tokenizer=tokenizer)
         dev_itr = DropBatchGen(args, data_mode="dev", tokenizer=tokenizer)
+        '''
+        train_itr = dev_itr = DropBatchGen(args, data_mode="dev", tokenizer=tokenizer)
     else:
         train_itr = TDropBatchGen(args, data_mode="train", tokenizer=tokenizer)
         dev_itr = TDropBatchGen(args, data_mode="dev", tokenizer=tokenizer)

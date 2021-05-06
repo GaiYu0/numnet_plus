@@ -9,7 +9,7 @@ from mspan_roberta_gcn.drop_roberta_dataset import DropReader
 from tag_mspan_robert_gcn.drop_roberta_mspan_dataset import DropReader as TDropReader
 from tag_mspan_robert_gcn.inference_batch_gen import DropBatchGen as TDropBatchGen
 from tag_mspan_robert_gcn.tag_mspan_roberta_gcn import NumericallyAugmentedBertNet as TNumericallyAugmentedBertNet
-from pytorch_transformers import RobertaTokenizer, RobertaModel, RobertaConfig
+from transformers import RobertaTokenizer, RobertaModel, RobertaConfig
 
 
 parser = argparse.ArgumentParser("Bert inference task.")
