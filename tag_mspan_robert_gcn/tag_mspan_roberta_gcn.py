@@ -3,6 +3,7 @@ import torch.nn as nn
 from typing import List, Dict, Any
 from collections import OrderedDict
 import torch.nn.functional as F
+from transformers.file_utils import ModelOutput
 
 from tools import allennlp as util
 from tools.utils import DropEmAndF1
@@ -361,7 +362,7 @@ class NumericallyAugmentedBertNet(nn.Module):
             else:
                 multispan_log_probs, multispan_logits = self._multispan_module(sequence_output)
 
-        output_dict = {}
+        output_dict = ModelOutput()
 
         # If answer is given, compute the loss.
         if answer_as_passage_spans is not None or answer_as_question_spans is not None or answer_as_add_sub_expressions is not None or answer_as_counts is not None:
