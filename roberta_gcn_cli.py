@@ -56,6 +56,7 @@ class ModelArguments:
 @dataclass
 class DataTrainingArguments:
     data_dir: str
+    max_train_samples: Optional[int] = field(default=None)
 
 
 logger = logging.getLogger(__name__)
@@ -71,7 +72,8 @@ def main():
     tokenizer = RobertaTokenizer.from_pretrained(model_args.model_name_or_path)
 
     logger.info("Loading data...")
-    train_dataset = eval_dataset = DropDataset(data_args, data_mode="dev", tokenizer=tokenizer)
+    train_dataset = DropDataset(data_args, data_mode="train", tokenizer=tokenizer)
+    eval_dataset = DropDataset(data_args, data_mode="dev", tokenizer=tokenizer)
 
     logger.info("Building Roberta model...")
     roberta_model = RobertaModel.from_pretrained(model_args.model_name_or_path)
@@ -90,7 +92,7 @@ def main():
         eval_dataset=eval_dataset if training_args.do_eval else None,
         tokenizer=tokenizer,
         data_collator=DropDataCollator(tokenizer),
-        compute_metrics=lambda eval_predictions: 0,
+        compute_metrics=None,
     )
 
     # Training

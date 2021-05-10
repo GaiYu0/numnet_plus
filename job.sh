@@ -4,10 +4,10 @@
 #SBATCH -N 1 # number of nodes requested
 #SBATCH -n 9 # number of tasks (i.e. processes)
 #SBATCH --cpus-per-task 1
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:8
 ##SBATCH --gres=gpu:v100_32:1
 ##SBATCH --gres=gpu:v100_32_maxq:1
-#SBATCH --nodelist=bombe
+#SBATCH --nodelist=ace
 ##SBATCH --exclude=
 #SBATCH -t 7-00:00
 ##SBATCH -o slurm.%N.%j.out # STDOUT
@@ -74,6 +74,7 @@ MODEL_ARGS="
   --gcn_steps 1
 "
 DATA_ARGS="--data_dir ${DATA_DIR}"
+# DATA_ARGS="--data_dir ${DATA_DIR} --max_train_samples 64"
 OUTPUT_DIR=${BASE_DIR}/numnet_plus_${SEED}_LR_${LR}_BLR_${BLR}_WD_${WD}_BWD_${BWD}${TMSPAN}
 TRAINING_ARGS="
     --output_dir ${OUTPUT_DIR} \
@@ -144,7 +145,7 @@ TRAINING_ARGS="
 "
 
 echo "Start training..."
-python ${CODE_DIR}/roberta_gcn_cli.py \
+python -m torch.distributed.launch --nproc_per_node 8 ${CODE_DIR}/roberta_gcn_cli.py \
     ${MODEL_ARGS} \
     ${DATA_ARGS} \
     ${TRAINING_ARGS}

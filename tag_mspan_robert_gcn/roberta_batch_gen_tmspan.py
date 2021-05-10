@@ -1,3 +1,4 @@
+from itertools import *
 import os
 import pickle
 import random
@@ -17,11 +18,11 @@ class DropDataset(Dataset):
             data = pickle.load(f)
 
         self.data = []
-        for item in data:
+        for item in data if data_args.max_train_samples is None else islice(data, data_args.max_train_samples):
             question_tokens = tokenizer.convert_tokens_to_ids(item["question_tokens"])
             passage_tokens = tokenizer.convert_tokens_to_ids(item["passage_tokens"])
-            question_passage_tokens = [ Token(text=item[0], idx=item[1][0], edx=item[1][1] ) for item in zip(item["question_passage_tokens"],
-                    [(0,0)] + item["question_token_offsets"] + [(0,0)]+ item["passage_token_offsets"] + [(0, 0)])]
+#           question_passage_tokens = [Token(text=item[0], idx=item[1][0], edx=item[1][1]) for item in zip(item["question_passage_tokens"], [(0,0)] + item["question_token_offsets"] + [(0,0)]+ item["passage_token_offsets"] + [(0, 0)])]
+            question_passage_tokens = [Token(text, idx=start, edx=end) for text, [start, end] in zip(item["question_passage_tokens"], chain([(0,0)], item["question_token_offsets"], [(0,0)], item["passage_token_offsets"], [(0, 0)]))]
             item["question_passage_tokens"] = question_passage_tokens
             self.data.append((question_tokens, passage_tokens, item))
 

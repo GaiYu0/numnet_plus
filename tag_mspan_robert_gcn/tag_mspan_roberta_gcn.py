@@ -490,6 +490,15 @@ class NumericallyAugmentedBertNet(nn.Module):
                 marginal_log_likelihood = log_marginal_likelihood_list[0]
             output_dict["loss"] = - marginal_log_likelihood.mean()
 
+        return output_dict
+
+    def postprocess_qa_predictions(self,  # type: ignore
+                                   best_answer_ability,
+                                   best_passage_span,
+                                   best_question_span,
+                                   best_signs_for_numbers,
+                                   best_count_number,
+                                   stage="eval"):
         with torch.no_grad():
             best_answer_ability = best_answer_ability.detach().cpu().numpy()
             if metadata is not None:
@@ -592,7 +601,7 @@ class NumericallyAugmentedBertNet(nn.Module):
                         self._drop_metrics(predicted_answer, answer_annotations)
 
                     i += 1
-            return output_dict
+
 
     def get_metrics(self, reset: bool = False) -> Dict[str, float]:
         exact_match, f1_score = self._drop_metrics.get_metric(reset)
